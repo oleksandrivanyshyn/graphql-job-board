@@ -1,9 +1,7 @@
+import { getJobs } from './db/jobs.js';
+
 export const resolvers = {
   Query: {
-    job: () => ({
-      id: 'test-id',
-      title: 'Software Engineer',
-      description: 'We are looking for a Software Engineer.',
-    }),
+    jobs: () => getJobs(),
   },
 };
