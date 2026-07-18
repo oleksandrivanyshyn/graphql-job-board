@@ -28,7 +28,10 @@ export const resolvers = {
     },
   },
   Mutation: {
-    createJob: (_root, { input: { title, description } }) => {
+    createJob: (_root, { input: { title, description } }, { auth }) => {
+      if (!auth) {
+        throw unauthorizedError('Missing authentication');
+      }
       const companyId = 'FjcJCHJALA4i'; // TODO set based on user
       return createJob({ companyId, title, description });
     },
@@ -48,6 +51,11 @@ export const resolvers = {
 function notFoundError(message) {
   return new GraphQLError(message, {
     extensions: { code: 'NOT_FOUND' },
+  });
+}
+function unauthorizedError(message) {
+  return new GraphQLError(message, {
+    extensions: { code: 'UNAUTHORIZED' },
   });
 }
 const toIsoDate = (value) => value.split('T')[0];
