@@ -1,6 +1,7 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache } from '@apollo/client';
 import { GraphQLClient } from 'graphql-request';
 import { getAccessToken } from '../auth';
+import { SetContextLink } from '@apollo/client/link/context';
 
 const client = new GraphQLClient('http://localhost:9000/graphql', {
   headers: () => {
@@ -11,12 +12,25 @@ const client = new GraphQLClient('http://localhost:9000/graphql', {
     return {};
   },
 });
+const httpLink = new HttpLink({ uri: 'http://localhost:9000/graphql' });
+
+const authLink = new SetContextLink(({ headers }) => {
+  const accessToken = getAccessToken();
+  if (accessToken) {
+    return {
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+  }
+  return { headers };
+});
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  link: new HttpLink({ uri: 'http://localhost:9000/graphql' }),
+  link: authLink.concat(httpLink),
 });
-
 export async function createJob({ title, description }) {
   const mutation = gql`
     mutation CreateJob($input: CreateJobInput!) {
