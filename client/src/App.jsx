@@ -8,6 +8,8 @@ import CreateJobPage from './pages/CreateJobPage';
 import HomePage from './pages/HomePage';
 import JobPage from './pages/JobPage';
 import LoginPage from './pages/LoginPage';
+import { ApolloProvider } from '@apollo/client/react';
+import { apolloClient } from './lib/graphql/queries.js';
 
 function App() {
   const navigate = useNavigate();
@@ -24,28 +26,18 @@ function App() {
   };
 
   return (
-    <>
+    <ApolloProvider client={apolloClient}>
       <NavBar user={user} onLogout={handleLogout} />
       <main className="section">
         <Routes>
-          <Route index path="/"
-            element={<HomePage />}
-          />
-          <Route path="/companies/:companyId"
-            element={<CompanyPage />}
-          />
-          <Route path="/jobs/new"
-            element={<CreateJobPage />}
-          />
-          <Route path="/jobs/:jobId"
-            element={<JobPage />}
-          />
-          <Route path="/login"
-            element={<LoginPage onLogin={handleLogin} />}
-          />
+          <Route index path="/" element={<HomePage />} />
+          <Route path="/companies/:companyId" element={<CompanyPage />} />
+          <Route path="/jobs/new" element={<CreateJobPage />} />
+          <Route path="/jobs/:jobId" element={<JobPage />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         </Routes>
       </main>
-    </>
+    </ApolloProvider>
   );
 }
 
