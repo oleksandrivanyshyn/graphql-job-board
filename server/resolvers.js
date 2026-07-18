@@ -5,6 +5,7 @@ export const resolvers = {
   Query: {
     jobs: () => getJobs(),
     job: (root, { id }) => getJob(id),
+    company: (root, { id }) => getCompany(id),
   },
   Job: {
     company: (job) => getCompany(job.companyId),
