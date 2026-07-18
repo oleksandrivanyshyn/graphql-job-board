@@ -103,6 +103,9 @@ export async function getJobs() {
       }
     }
   `;
-  const { data } = await apolloClient.query({ query });
+  const { data } = await apolloClient.query(
+    { query },
+    { fetchPolicy: 'network-only' },
+  );
   return data.jobs;
 }
