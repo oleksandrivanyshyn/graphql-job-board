@@ -17,6 +17,7 @@ export const resolvers = {
       if (!company) {
         throw notFoundError(`Company not found: ${id}`);
       }
+      return company;
     },
   },
   Company: {
